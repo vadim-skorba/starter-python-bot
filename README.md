@@ -76,3 +76,4 @@ The `slack_bot.py` module implements and interface that is needed to run a multi
 ## License
 
 See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
+
