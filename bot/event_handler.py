@@ -1,11 +1,12 @@
+from __future__ import print_function
+import sys
+
 import json
 import logging
 import re
 
 logger = logging.getLogger(__name__)
 
-from __future__ import print_function
-import sys
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
