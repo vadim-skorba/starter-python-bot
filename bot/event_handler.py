@@ -1,8 +1,6 @@
 from __future__ import print_function
 import sys
 
-from firebase import firebase
-
 import json
 import logging
 import re
@@ -41,6 +39,7 @@ class RtmEventHandler(object):
             pass
 
     def _save(self, key, value):
+        from firebase import firebase
         firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
         firebase.post('/glossary', {'key': key, 'value': value}, {'print': 'silent'})
 
