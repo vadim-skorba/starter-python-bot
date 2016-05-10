@@ -54,6 +54,9 @@ class RtmEventHandler(object):
         if not False:#self.clients.is_message_from_me(event['user']):
 
             eprint(event)
+            
+            self._save('test', 'Test is testing')
+            self._get('test')
 
             msg_txt = event['text']
 
