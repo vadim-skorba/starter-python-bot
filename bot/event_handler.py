@@ -1,3 +1,5 @@
+from firebase import firebase
+
 from __future__ import print_function
 import sys
 
@@ -38,11 +40,19 @@ class RtmEventHandler(object):
         else:
             pass
 
+    def _save(key, value):
+        firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
+        firebase.post('/glossary', {'key': key, 'value': value}, {'print': 'silent'})
+
+    def _get(key):
+        firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
+        result = firebase.get('/glossary', None)
+        eprint(result)
+
     def _handle_message(self, event):
         # Filter out messages from the bot itself
         if not False:#self.clients.is_message_from_me(event['user']):
 
-            logger.debug(event)
             eprint(event)
 
             msg_txt = event['text']
