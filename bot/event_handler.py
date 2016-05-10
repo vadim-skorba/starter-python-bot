@@ -37,6 +37,7 @@ class RtmEventHandler(object):
         if not False:#self.clients.is_message_from_me(event['user']):
 
             eprint(event['channel'], event)
+            logger.debug(event)
 
             msg_txt = event['text']
 
