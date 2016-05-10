@@ -40,11 +40,11 @@ class RtmEventHandler(object):
         else:
             pass
 
-    def _save(key, value):
+    def _save(self, key, value):
         firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
         firebase.post('/glossary', {'key': key, 'value': value}, {'print': 'silent'})
 
-    def _get(key):
+    def _get(self, key):
         firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
         result = firebase.get('/glossary', None)
         eprint(result)
