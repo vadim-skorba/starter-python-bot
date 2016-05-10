@@ -45,6 +45,7 @@ class RtmEventHandler(object):
         firebase.post('/glossary', data)
 
     def _get(self, key):
+        from firebase import firebase
         firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
         result = firebase.get('/glossary', None)
         eprint(result)
