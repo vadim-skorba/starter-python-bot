@@ -4,6 +4,11 @@ import re
 
 logger = logging.getLogger(__name__)
 
+from __future__ import print_function
+import sys
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 class RtmEventHandler(object):
     def __init__(self, slack_clients, msg_writer):
@@ -37,6 +42,7 @@ class RtmEventHandler(object):
         if not False:#self.clients.is_message_from_me(event['user']):
 
             logger.debug(event)
+            eprint(event)
 
             msg_txt = event['text']
 
