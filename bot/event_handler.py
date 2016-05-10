@@ -1,7 +1,7 @@
-from firebase import firebase
-
 from __future__ import print_function
 import sys
+
+from firebase import firebase
 
 import json
 import logging
