@@ -96,6 +96,6 @@ class RtmEventHandler(object):
                     if value:
                         self.msg_writer.send_message(event['channel'], 'Definition for `{}` is: ```{}```'.format(key, value))
                     else:
-                        self.msg_writer.send_message(event['channel'], '`{}` is not defined yet. Use: `<@{}> {}=Definition text` to define'.format(key, key, self.clients.bot_user_id()))                
+                        self.msg_writer.send_message(event['channel'], '`{}` is not defined yet. Use: `<@{}> {}=Definition text` to define'.format(key, self.clients.bot_user_id(), key))                
                 else:
                     self.msg_writer.send_message(event['channel'], 'Wrong input')
