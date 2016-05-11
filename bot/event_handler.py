@@ -41,28 +41,30 @@ class RtmEventHandler(object):
     def _save(self, key, value):
         from firebase import firebase
         firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
+        if firebase.get('/glossary', key):
+            return False
         firebase.post('/glossary/' + key, value)
+        return True
 
     def _get(self, key):
         from firebase import firebase
         firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
-        result = firebase.get('/glossary', key)
-        eprint(result)
-
+        return firebase.get('/glossary', key)
+        
     def _handle_message(self, event):
         # Filter out messages from the bot itself
-        if not False:#self.clients.is_message_from_me(event['user']):
+        if not self.clients.is_message_from_me(event['user']):
 
-            eprint(event)
+            #eprint(event)
             
-            self._save('test', 'Test is testing')
-            self._get('test')
+            #self._save('test', 'Test is testing')
+            #self._get('test')
 
             msg_txt = event['text']
 
             if self.clients.is_bot_mention(msg_txt):
                 # e.g. user typed: "@pybot tell me a joke!"
-                if 'help' in msg_txt:
+                '''if 'help' in msg_txt:
                     self.msg_writer.write_help_message(event['channel'])
                 elif re.search('hi|hey|hello|howdy', msg_txt):
                     self.msg_writer.write_greeting(event['channel'], event['user'])
@@ -71,4 +73,17 @@ class RtmEventHandler(object):
                 elif 'attachment' in msg_txt:
                     self.msg_writer.demo_attachment(event['channel'])
                 else:
-                    self.msg_writer.write_prompt(event['channel'])
+                    self.msg_writer.write_prompt(event['channel'])'''
+
+                if '=' in msg_txt:
+                    (key, value) = msg_txt.split('=')
+                    if self._save(key, value):
+                        self.msg_writer.send_message(event['channel'], 'Saved {} as {}'.format(key, value))
+                    else:
+                        self.msg_writer.send_message(event['channel'], 'Already defined as:')
+                        self.msg_writer.send_message(event['channel'], self._get(key))
+                else:
+                    if self._get(msg_txt):
+                        self.msg_writer.send_message(event['channel'], self._get(msg_txt))
+                    else:
+                        self.msg_writer.send_message(event['channel'], 'Not defined yet')
