@@ -14,7 +14,8 @@ class Messenger(object):
             channel_id = channel_id['id']
         logger.debug('Sending msg: {} to channel: {}'.format(msg, channel_id))
         channel = self.clients.rtm.server.channels.find(channel_id)
-        channel.send_message("{}".format(msg.encode('ascii', 'ignore')))
+        channel.send_message("{}".format(msg.encode('utf8', 'ignore')))
+        #channel.send_message("{}".format(msg.encode('ascii', 'ignore')))
 
     def write_help_message(self, channel_id):
         bot_uid = self.clients.bot_user_id()
