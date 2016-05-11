@@ -61,6 +61,7 @@ class RtmEventHandler(object):
             #self._get('test')
 
             msg_txt = event['text']
+            eprint(msg_txt)
 
             if self.clients.is_bot_mention(msg_txt):
                 # e.g. user typed: "@pybot tell me a joke!"
