@@ -49,7 +49,9 @@ class RtmEventHandler(object):
     def _get(self, key):
         from firebase import firebase
         firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
-        return firebase.get('/glossary', key)
+        if firebase.get('/glossary', key):
+            return firebase.get('/glossary', key).itervalues().next()
+        return False
         
     def _handle_message(self, event):
         # Filter out messages from the bot itself
@@ -61,7 +63,7 @@ class RtmEventHandler(object):
             #self._get('test')
 
             msg_txt = event['text']
-            eprint(msg_txt)
+            #eprint(self.clients.rtm.server.login_data['self'])
 
             if self.clients.is_bot_mention(msg_txt):
                 # e.g. user typed: "@pybot tell me a joke!"
@@ -76,15 +78,24 @@ class RtmEventHandler(object):
                 else:
                     self.msg_writer.write_prompt(event['channel'])'''
 
-                if '=' in msg_txt:
-                    (key, value) = msg_txt.split('=')
+                add_definition_regexp = re.search("^<@{}>[\s:]+(.+)\s*=\s*(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt)
+                get_definition_regexp = re.search("^<@{}>[\s:]+(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt)
+                
+                self.clients.send_user_typing(event['channel'])
+                
+                if add_definition_regexp:
+                    key = add_definition_regexp.group(1)
+                    value = add_definition_regexp.group(2)
                     if self._save(key, value):
-                        self.msg_writer.send_message(event['channel'], 'Saved {} as {}'.format(key, value))
+                        self.msg_writer.send_message(event['channel'], 'Saved `{}` as: ```{}```'.format(key, value))
                     else:
-                        self.msg_writer.send_message(event['channel'], 'Already defined as:')
-                        self.msg_writer.send_message(event['channel'], self._get(key))
+                        self.msg_writer.send_message(event['channel'], '`{}` already defined as: ```{}```'.format(key, self._get(key)))
+                elif get_definition_regexp:
+                    key = get_definition_regexp.group(1)
+                    value = self._get(key)
+                    if value:
+                        self.msg_writer.send_message(event['channel'], 'Definition for `{}` is: ```{}```'.format(key, value))
+                    else:
+                        self.msg_writer.send_message(event['channel'], '`{}` is not defined yet. Use: `<@{}> key=Definition text` to define'.format(key, self.clients.bot_user_id()))                
                 else:
-                    if self._get(msg_txt):
-                        self.msg_writer.send_message(event['channel'], self._get(msg_txt))
-                    else:
-                        self.msg_writer.send_message(event['channel'], 'Not defined yet')
+                    self.msg_writer.send_message(event['channel'], 'Wrong input')
