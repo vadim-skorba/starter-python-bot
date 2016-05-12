@@ -54,7 +54,7 @@ class RtmEventHandler(object):
         return False
 
     def _is_hidden_message_event(self, event):
-        return 'hidden' in event and event['hidden'] == True:
+        return 'hidden' in event and event['hidden'] == True
 
     def _handle_message(self, event):
         # Filter out messages from the bot itself
