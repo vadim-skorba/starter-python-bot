@@ -53,20 +53,12 @@ class RtmEventHandler(object):
             return firebase.get('/glossary', key).itervalues().next()
         return False
 
-    def _handle_message_change_event(self, event):
-        if 'subtype' in event and event['subtype'] == 'message_changed':
-            return event['message']
-        else:
-            return event
-
+    def _is_hidden_message_event(self, event):
+        return 'hidden' in event and event['hidden'] == True:
 
     def _handle_message(self, event):
-        eprint(event)
-        event = self._handle_message_change_event(event)
-        eprint(event)
-        
         # Filter out messages from the bot itself
-        if not self.clients.is_message_from_me(event['user']):
+        if not self.clients.is_message_from_me(event['user']) and not self._is_hidden_message_event(event):
 
             msg_txt = event['text']
 
