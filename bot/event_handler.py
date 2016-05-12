@@ -55,15 +55,9 @@ class RtmEventHandler(object):
         
     def _handle_message(self, event):
         # Filter out messages from the bot itself
-        if True:#not self.clients.is_message_from_me(event['user']):
-
-            #eprint(event)
-            
-            #self._save('test', 'Test is testing')
-            #self._get('test')
+        if not self.clients.is_message_from_me(event['user']):
 
             msg_txt = event['text']
-            #eprint(self.clients.rtm.server.login_data['self'])
 
             if self.clients.is_bot_mention(msg_txt):
                 # e.g. user typed: "@pybot tell me a joke!"
