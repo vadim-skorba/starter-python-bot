@@ -19,6 +19,12 @@ class SlackClients(object):
         # SlackClient is a Slack Websocket RTM API Client
         self.rtm = SlackClient(token)
 
+    def handle_message_change_event(self, event):
+        if 'subtype' in event and event['subtype'] == 'message_changed':
+            return event['message']
+        else:
+            return event
+
     def bot_user_id(self):
         return self.rtm.server.login_data['self']['id']
 
