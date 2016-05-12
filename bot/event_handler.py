@@ -52,12 +52,19 @@ class RtmEventHandler(object):
         if firebase.get('/glossary', key):
             return firebase.get('/glossary', key).itervalues().next()
         return False
-        
+
+    def _handle_message_change_event(self, event):
+        if 'subtype' in event and event['subtype'] == 'message_changed':
+            return event['message']
+        else:
+            return event
+
+
     def _handle_message(self, event):
-        eprint(event)
         # Filter out messages from the bot itself
         if not self.clients.is_message_from_me(event['user']):
 
+            event = _handle_message_change_event(event)
             msg_txt = event['text']
 
             if self.clients.is_bot_mention(msg_txt):
