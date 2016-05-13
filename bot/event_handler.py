@@ -15,6 +15,8 @@ class RtmEventHandler(object):
     def __init__(self, slack_clients, msg_writer):
         self.clients = slack_clients
         self.msg_writer = msg_writer
+        from firebase import firebase
+        self.firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
 
     def handle(self, event):
 
@@ -39,18 +41,14 @@ class RtmEventHandler(object):
             pass
 
     def _save(self, key, value):
-        from firebase import firebase
-        firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
-        if firebase.get('/glossary', key):
+        if self.firebase.get('/glossary', key):
             return False
-        firebase.post('/glossary/' + key, value)
+        self.firebase.post('/glossary/' + key, value)
         return True
 
     def _get(self, key):
-        from firebase import firebase
-        firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
-        if firebase.get('/glossary', key):
-            return firebase.get('/glossary', key).itervalues().next()
+        if self.firebase.get('/glossary', key):
+            return self.firebase.get('/glossary', key).itervalues().next()
         return False
 
     def _is_hidden_message_event(self, event):
@@ -63,17 +61,6 @@ class RtmEventHandler(object):
             msg_txt = event['text']
 
             if self.clients.is_bot_mention(msg_txt):
-                # e.g. user typed: "@pybot tell me a joke!"
-                '''if 'help' in msg_txt:
-                    self.msg_writer.write_help_message(event['channel'])
-                elif re.search('hi|hey|hello|howdy', msg_txt):
-                    self.msg_writer.write_greeting(event['channel'], event['user'])
-                elif 'joke' in msg_txt:
-                    self.msg_writer.write_joke(event['channel'])
-                elif 'attachment' in msg_txt:
-                    self.msg_writer.demo_attachment(event['channel'])
-                else:
-                    self.msg_writer.write_prompt(event['channel'])'''
 
                 add_definition_regexp = re.search("^<@{}>[\s:]+(.+)\s*=\s*(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt)
                 get_definition_regexp = re.search("^<@{}>[\s:]+(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt)
@@ -84,15 +71,15 @@ class RtmEventHandler(object):
                     key = add_definition_regexp.group(1)
                     value = add_definition_regexp.group(2)
                     if self._save(key, value):
-                        self.msg_writer.send_message(event['channel'], 'Saved `{}` as: ```{}```'.format(key, value))
+                        self.msg_writer.send_message(event['channel'], u'Saved `{}` as: ```{}```'.format(key, value))
                     else:
-                        self.msg_writer.send_message(event['channel'], '`{}` already defined as: ```{}```'.format(key, self._get(key)))
+                        self.msg_writer.send_message(event['channel'], u'`{}` already defined as: ```{}```'.format(key, self._get(key)))
                 elif get_definition_regexp:
                     key = get_definition_regexp.group(1)
                     value = self._get(key)
                     if value:
-                        self.msg_writer.send_message(event['channel'], 'Definition for `{}` is: ```{}```'.format(key, value))
+                        self.msg_writer.send_message(event['channel'], u'Definition for `{}` is: ```{}```'.format(key, value))
                     else:
                         self.msg_writer.send_message(event['channel'], u'`{}` is not defined yet. Use: `<@{}> {}=Definition text` to define'.format(key, self.clients.bot_user_id(), key))                
                 else:
-                    self.msg_writer.send_message(event['channel'], 'Wrong input')
+                    self.msg_writer.send_message(event['channel'], u'Wrong input')
