@@ -17,6 +17,7 @@ class Messenger(object):
         channel.send_message("{}".format(msg.encode('ascii', 'ignore')))
 
     def write_help_message(self, channel_id):
+        return
         bot_uid = self.clients.bot_user_id()
         txt = '{}\n{}\n{}\n{}'.format(
             "I'm your friendly Slack bot written in Python.  I'll *_respond_* to the following commands:",
@@ -26,16 +27,19 @@ class Messenger(object):
         self.send_message(channel_id, txt)
 
     def write_greeting(self, channel_id, user_id):
+        return
         greetings = ['Hi', 'Hello', 'Nice to meet you', 'Howdy', 'Salutations']
         txt = '{}, <@{}>!'.format(random.choice(greetings), user_id)
         self.send_message(channel_id, txt)
 
     def write_prompt(self, channel_id):
+        return
         bot_uid = self.clients.bot_user_id()
         txt = "I'm sorry, I didn't quite understand... Can I help you? (e.g. `<@" + bot_uid + "> help`)"
         self.send_message(channel_id, txt)
 
     def write_joke(self, channel_id):
+        return
         question = "Why did the python cross the road?"
         self.send_message(channel_id, question)
         self.clients.send_user_typing_pause(channel_id)
@@ -48,6 +52,7 @@ class Messenger(object):
         self.send_message(channel_id, txt)
 
     def demo_attachment(self, channel_id):
+        return
         txt = "Beep Beep Boop is a ridiculously simple hosting platform for your Slackbots."
         attachment = {
             "pretext": "We bring bots to life. :sunglasses: :thumbsup:",
