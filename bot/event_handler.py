@@ -5,6 +5,8 @@ import json
 import logging
 import re
 
+from firebase import firebase
+
 logger = logging.getLogger(__name__)
 
 
@@ -15,7 +17,6 @@ class RtmEventHandler(object):
     def __init__(self, slack_clients, msg_writer):
         self.clients = slack_clients
         self.msg_writer = msg_writer
-        from firebase import firebase
         self.firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
 
     def handle(self, event):
