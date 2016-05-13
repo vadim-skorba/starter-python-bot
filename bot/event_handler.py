@@ -91,7 +91,7 @@ class RtmEventHandler(object):
                     key = get_definition_regexp.group(1)
                     value = self._get(key)
                     if value:
-                        self.msg_writer.send_message(event['channel'], 'Definition for `{}` is: ```{}```'.format(key, value))
+                        self.msg_writer.send_message(event['channel'], u'Definition for `{}` is: ```{}```'.format(key, value))
                     else:
                         self.msg_writer.send_message(event['channel'], '`{}` is not defined yet. Use: `<@{}> {}=Definition text` to define'.format(key, self.clients.bot_user_id(), key))                
                 else:
