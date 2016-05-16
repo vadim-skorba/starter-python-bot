@@ -44,13 +44,17 @@ class RtmEventHandler(object):
     def _save(self, key, value):
         if self.firebase.get('/glossary', key):
             return False
-        self.firebase.post('/glossary/' + key, value)
+        self.firebase.post('/glossary/' + key.lower(), value)
         return True
 
     def _get(self, key):
-        if self.firebase.get('/glossary', key):
-            return self.firebase.get('/glossary', key).itervalues().next()
+        result = self.firebase.get('/glossary', key.lower())
+        if result:
+            return result.itervalues().next()
         return False
+
+    def _clean_links(self, message):
+        return re.sub("<([^@\#\!].*?)(\|.*?)?>", r'\1', message)
 
     def _is_hidden_message_event(self, event):
         return 'hidden' in event and event['hidden'] == True
@@ -63,14 +67,15 @@ class RtmEventHandler(object):
 
             if self.clients.is_bot_mention(msg_txt):
 
-                add_definition_regexp = re.search("^<@{}>[\s:]+(.+)\s*=\s*(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt)
-                get_definition_regexp = re.search("^<@{}>[\s:]+(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt)
+                add_definition_regexp = re.search("^<@{}>[\s:]+(.+)\s*=\s*(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt, re.MULTILINE|re.DOTALL)
+                get_definition_regexp = re.search("^<@{}>[\s:]+(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt, re.MULTILINE|re.DOTALL)
                 
                 self.clients.send_user_typing(event['channel'])
                 
                 if add_definition_regexp:
                     key = add_definition_regexp.group(1)
                     value = add_definition_regexp.group(2)
+                    value = self._clean_links(value)
                     if self._save(key, value):
                         self.msg_writer.send_message(event['channel'], u'Saved `{}` as: ```{}```'.format(key, value))
                     else:
