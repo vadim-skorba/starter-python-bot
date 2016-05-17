@@ -12,5 +12,10 @@ config:
     info: This is an secret option
     type: secret
     default: not secret though
+  - name: AUTH
+    friendly_name: Firebase auth
+    info: This is an secret option
+    type: secret
+    default: 
 screenshots:
   - screenshot: resources/screenshot1.png
