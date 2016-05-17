@@ -19,8 +19,7 @@ class RtmEventHandler(object):
         self.clients = slack_clients
         self.msg_writer = msg_writer
         self.firebase = firebase.FirebaseApplication('https://sweltering-inferno-3699.firebaseio.com', None)
-        authentication = firebase.FirebaseAuthentication(os.getenv("AUTH", None))
-        self.firebase.authentication = authentication
+        self.firebase.authentication = firebase.FirebaseAuthentication(os.getenv("AUTH"), 'vadim.skorba@gmail.com')
 
     def handle(self, event):
 
