@@ -7,11 +7,20 @@ config:
     friendly_name: Severity level to show for logging.
     info: See https://docs.python.org/2/library/logging.html#levels
     default: DEBUG
-  - name: AUTH
+  - name: FIREBASE_URL
     global: true
-    friendly_name: Firebase auth
+    friendly_name: Firebase url
     info: This is an secret option
     type: secret
-    default: 
+  - name: FIREBASE_SECRET
+    global: true
+    friendly_name: Firebase secret
+    info: This is an secret option
+    type: secret
+  - name: FIREBASE_EMAIL
+    global: true
+    friendly_name: Firebase email
+    info: This is an secret option
+    type: secret
 screenshots:
   - screenshot: resources/screenshot1.png
