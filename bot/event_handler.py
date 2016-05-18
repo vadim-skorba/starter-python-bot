@@ -6,6 +6,7 @@ import json
 import logging
 import re
 import urllib
+import hashlib
 
 from firebase import firebase
 
@@ -65,12 +66,9 @@ class RtmEventHandler(object):
         return re.sub("<([^@\#\!].*?)(\|.*?)?>", r'\1', message)
 
     def _prepare_key(self, key):
-        # Clean dots
-        key = re.sub('\.', '', key)
-        if key == '':
-            return False
-        else:
-            return urllib.quote_plus(key.lower().encode('utf-8'))
+        hash_object = hashlib.md5(key.lower().encode('utf-8'))
+        hash_string = hash_object.hexdigest()
+        return hash_string
 
     def _is_hidden_message_event(self, event):
         return 'hidden' in event and event['hidden'] == True
