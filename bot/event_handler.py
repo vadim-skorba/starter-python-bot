@@ -87,7 +87,7 @@ class RtmEventHandler(object):
 
             if self.clients.is_bot_mention(msg_txt):
 
-                if msg_txt.search("^<@{}>[\s:]+all$".format(re.escape(self.clients.bot_user_id()))):
+                if re.search("^<@{}>[\s:]+all$".format(re.escape(self.clients.bot_user_id())), msg_txt):
                     ch = self.msg_writer.find_channel_by_name(event['user'])
                     return self.msg_writer.send_message(ch, json.dumps(self._get_all(key)))
 
