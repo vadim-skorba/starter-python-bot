@@ -87,9 +87,9 @@ class RtmEventHandler(object):
 
             if self.clients.is_bot_mention(msg_txt):
 
-                if re.search("^<@{}>[\s:]+alllll$".format(re.escape(self.clients.bot_user_id())), msg_txt):
-                    return self.msg_writer.send_message(event['channel'], json.dumps(event))
-                    return self.msg_writer.send_message(ch, json.dumps(self._get_all(key)))
+                #if re.search("^<@{}>[\s:]+alllll$".format(re.escape(self.clients.bot_user_id())), msg_txt):
+                    #return self.msg_writer.send_message(event['channel'], json.dumps(event))
+                    #return self.msg_writer.send_message(ch, json.dumps(self._get_all(key)))
 
                 add_definition_regexp = re.search("^<@{}>[\s:]+(.+)\s*=\s*(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt, re.MULTILINE|re.DOTALL)
                 get_definition_regexp = re.search("^<@{}>[\s:]+(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt, re.MULTILINE|re.DOTALL)
