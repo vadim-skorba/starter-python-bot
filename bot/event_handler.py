@@ -2,6 +2,7 @@ from __future__ import print_function
 import sys
 import os
 
+from six import iteritems
 import json
 import logging
 import re
