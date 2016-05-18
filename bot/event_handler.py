@@ -23,7 +23,6 @@ class RtmEventHandler(object):
         self.firebase.authentication = firebase.FirebaseAuthentication(os.getenv("FIREBASE_SECRET"), os.getenv("FIREBASE_EMAIL"))
 
     def handle(self, event):
-
         if 'type' in event:
             self._handle_by_type(event['type'], event)
 
@@ -47,17 +46,20 @@ class RtmEventHandler(object):
     def _save(self, key, value):
         if self._get(key):
             return False
-        self.firebase.post('/glossary/' + urllib.quote_plus(key.lower().encode('utf-8')), value)
+        self.firebase.post('/glossary/' + urllib.quote_plus(self._clean_dots(key.lower()).encode('utf-8')), value)
         return True
 
     def _get(self, key):
-        result = self.firebase.get('/glossary', urllib.quote_plus(key.lower().encode('utf-8')))
+        result = self.firebase.get('/glossary', urllib.quote_plus(self._clean_dots(key.lower()).encode('utf-8')))
         if result:
             return result.itervalues().next()
         return False
 
     def _clean_links(self, message):
         return re.sub("<([^@\#\!].*?)(\|.*?)?>", r'\1', message)
+
+    def _clean_dots(self, message):
+        return re.sub('\.', '', message)
 
     def _is_hidden_message_event(self, event):
         return 'hidden' in event and event['hidden'] == True
