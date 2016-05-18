@@ -5,6 +5,7 @@ import os
 import json
 import logging
 import re
+import urllib
 
 from firebase import firebase
 
@@ -44,13 +45,13 @@ class RtmEventHandler(object):
             pass
 
     def _save(self, key, value):
-        if self.firebase.get('/glossary', key):
+        if self._get(key):
             return False
-        self.firebase.post('/glossary/' + key.lower(), value)
+        self.firebase.post('/glossary/' + urllib.quote_plus(key.lower().encode('utf-8')), value)
         return True
 
     def _get(self, key):
-        result = self.firebase.get('/glossary', key.lower())
+        result = self.firebase.get('/glossary', urllib.quote_plus(key.lower().encode('utf-8')))
         if result:
             return result.itervalues().next()
         return False
