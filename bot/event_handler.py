@@ -44,22 +44,33 @@ class RtmEventHandler(object):
             pass
 
     def _save(self, key, value):
-        if self._get(key):
+        key = self._prepare_key(key)
+        if key:
+            if self._get(key):
+                return False
+            self.firebase.post('/glossary/' + key, value)
+            return True
+        else:
             return False
-        self.firebase.post('/glossary/' + urllib.quote_plus(self._clean_dots(key.lower()).encode('utf-8')), value)
-        return True
 
     def _get(self, key):
-        result = self.firebase.get('/glossary', urllib.quote_plus(self._clean_dots(key.lower()).encode('utf-8')))
-        if result:
-            return result.itervalues().next()
+        key = self._prepare_key(key)
+        if key:
+            result = self.firebase.get('/glossary', key)
+            if result:
+                return result.itervalues().next()
         return False
 
     def _clean_links(self, message):
         return re.sub("<([^@\#\!].*?)(\|.*?)?>", r'\1', message)
 
-    def _clean_dots(self, message):
-        return re.sub('\.', '', message)
+    def _prepare_key(self, key):
+        # Clean dots
+        key = re.sub('\.', '', message)
+        if key == '':
+            return False
+        else:
+            return urllib.quote_plus(key.lower().encode('utf-8'))
 
     def _is_hidden_message_event(self, event):
         return 'hidden' in event and event['hidden'] == True
