@@ -66,7 +66,7 @@ class RtmEventHandler(object):
 
     def _prepare_key(self, key):
         # Clean dots
-        key = re.sub('\.', '', message)
+        key = re.sub('\.', '', key)
         if key == '':
             return False
         else:
