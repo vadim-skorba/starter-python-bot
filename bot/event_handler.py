@@ -62,6 +62,12 @@ class RtmEventHandler(object):
                 return result.itervalues().next()
         return False
 
+    def _get_all(self, key):
+        key = self._prepare_key(key)
+        if key:
+            return self.firebase.get('/glossary', key)
+        return False
+
     def _clean_links(self, message):
         return re.sub("<([^@\#\!].*?)(\|.*?)?>", r'\1', message)
 
@@ -80,6 +86,10 @@ class RtmEventHandler(object):
             msg_txt = event['text']
 
             if self.clients.is_bot_mention(msg_txt):
+
+                if msg_txt.search("^<@{}>[\s:]+all$".format(re.escape(self.clients.bot_user_id()))):
+                    ch = self.msg_writer.find_channel_by_name(event['user'])
+                    return self.msg_writer.send_message(ch, json.dumps(self._get_all(key)))
 
                 add_definition_regexp = re.search("^<@{}>[\s:]+(.+)\s*=\s*(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt, re.MULTILINE|re.DOTALL)
                 get_definition_regexp = re.search("^<@{}>[\s:]+(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt, re.MULTILINE|re.DOTALL)
