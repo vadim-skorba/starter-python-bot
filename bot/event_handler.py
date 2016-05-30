@@ -47,6 +47,8 @@ class RtmEventHandler(object):
     def _save(self, key, value):
         key = self._prepare_key(key)
         if key:
+            eprint(key)
+            eprint(self._get(key))
             if self._get(key):
                 return False
             self.firebase.post('/glossary/' + key, value)
@@ -58,6 +60,7 @@ class RtmEventHandler(object):
         key = self._prepare_key(key)
         if key:
             result = self.firebase.get('/glossary', key)
+            eprint(result)
             if result:
                 return result.itervalues().next()
         return False
