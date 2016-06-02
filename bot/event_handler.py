@@ -50,8 +50,6 @@ class RtmEventHandler(object):
             if self._get(key):
                 return False
             self.firebase.post('/glossary/' + preparedKey, value)
-            self.firebase.post('/glossary/' + preparedKey + '/value', value)
-            self.firebase.post('/glossary/' + preparedKey + '/key', key)
             return True
         else:
             return False
@@ -60,7 +58,6 @@ class RtmEventHandler(object):
         preparedKey = self._prepare_key(key)
         if preparedKey:
             result = self.firebase.get('/glossary', preparedKey)
-            eprint(result)
             if result:
                 return result.itervalues().next()
         return False
