@@ -45,30 +45,30 @@ class RtmEventHandler(object):
             pass
 
     def _save(self, key, value):
-        key = self._prepare_key(key)
-        if key:
-            eprint(key)
+        preparedKey = self._prepare_key(key)
+        if preparedKey:
+            eprint(preparedKey)
             eprint(self._get(key))
             if self._get(key):
                 return False
-            self.firebase.post('/glossary/' + key, value)
+            self.firebase.post('/glossary/' + preparedKey, value)
             return True
         else:
             return False
 
     def _get(self, key):
-        key = self._prepare_key(key)
-        if key:
-            result = self.firebase.get('/glossary', key)
+        preparedKey = self._prepare_key(key)
+        if preparedKey:
+            result = self.firebase.get('/glossary', preparedKey)
             eprint(result)
             if result:
                 return result.itervalues().next()
         return False
 
     def _get_all(self, key):
-        key = self._prepare_key(key)
-        if key:
-            return self.firebase.get('/glossary', key)
+        preparedKey = self._prepare_key(key)
+        if preparedKey:
+            return self.firebase.get('/glossary', preparedKey)
         return False
 
     def _clean_links(self, message):
