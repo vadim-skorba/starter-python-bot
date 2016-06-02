@@ -47,11 +47,11 @@ class RtmEventHandler(object):
     def _save(self, key, value):
         preparedKey = self._prepare_key(key)
         if preparedKey:
-            eprint(preparedKey)
-            eprint(self._get(key))
             if self._get(key):
                 return False
             self.firebase.post('/glossary/' + preparedKey, value)
+            self.firebase.post('/glossary/' + preparedKey + '/value', value)
+            self.firebase.post('/glossary/' + preparedKey + '/key', key)
             return True
         else:
             return False
