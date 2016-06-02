@@ -94,7 +94,7 @@ class RtmEventHandler(object):
                     #return self.msg_writer.send_message(event['channel'], json.dumps(event))
                     #return self.msg_writer.send_message(ch, json.dumps(self._get_all(key)))
 
-                add_definition_regexp = re.search("^<@{}>[\s:]+(.+)\s*=\s*(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt, re.MULTILINE|re.DOTALL)
+                add_definition_regexp = re.search("^<@{}>[\s:]+(.+?)\s*=\s*(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt, re.MULTILINE|re.DOTALL)
                 get_definition_regexp = re.search("^<@{}>[\s:]+(.+)".format(re.escape(self.clients.bot_user_id())), msg_txt, re.MULTILINE|re.DOTALL)
                 
                 self.clients.send_user_typing(event['channel'])
