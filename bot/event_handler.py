@@ -46,6 +46,9 @@ class RtmEventHandler(object):
 
     def _save(self, key, value):
         preparedKey = self._prepare_key(key)
+        eprint(key)
+        eprint(preparedKey)
+        eprint(value)
         if preparedKey:
             if self._get(key):
                 return False
